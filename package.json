@@ -1,0 +1,27 @@
+{
+  "name": "pnp",
+  "version": "1.0.0",
+  "description": "",
+  "private": true,
+  "main": "./src/main.ts",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+		"start": "node dist/main.js"
+  },
+  "keywords": [],
+  "author": "Yael Mártin Alejandro Alcalá León <yael.alcalla@gmail.com>",
+  "license": "UNLICENSED",
+  "devEngines": {
+    "packageManager": {
+      "name": "pnpm",
+      "version": "12.16.1",
+      "onFail": "download"
+    }
+  },
+  "packageManager": "pnpm@12.16.1",
+  "type": "module",
+  "devDependencies": {
+		"typescript": "^7.0.2",
+    "@types/node": "^26.6.5"
+  }
+}
