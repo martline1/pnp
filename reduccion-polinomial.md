@@ -1,0 +1,2 @@
+# Reducción Polinomial
+
