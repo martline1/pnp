@@ -6,7 +6,8 @@
   "main": "./src/main.ts",
   "scripts": {
     "build": "tsc -p tsconfig.json",
-		"start": "node dist/main.js"
+		"start": "node dist/main.js",
+    "dev": "pnpm build && pnpm start"
   },
   "keywords": [],
   "author": "Yael Mártin Alejandro Alcalá León <yael.alcalla@gmail.com>",
