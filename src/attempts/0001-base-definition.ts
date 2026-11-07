@@ -5,6 +5,10 @@
 
 // Objetivo: O(n^12)
 
+import * as path from "node:path";
+
+console.log(`Imported: ${path.basename(__filename)}`);
+
 /**
  * @example
  * ```ts

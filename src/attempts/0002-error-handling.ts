@@ -3,6 +3,10 @@
 // [X] Si en algún punto observo que hay más variables que las que debería, throw
 // [X] Si en algún punto observo que cada expresión no tiene 3 variables, throw
 
+import * as path from "node:path";
+
+console.log(`Imported: ${path.basename(__filename)}`);
+
 class Variables {
   private readonly data = new Set<string>();
 

@@ -1,4 +1,4 @@
-export * from "./attempts/0003-error-handling.js"
+export * from "./attempts/0004-lambdas"
 
 function main() {}
 

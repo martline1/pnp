@@ -1,5 +1,9 @@
 // Objetivo: O(n^12)
 
+import * as path from "node:path";
+
+console.log(`Imported: ${path.basename(__filename)}`);
+
 class Variables {
   private readonly data = new Set<string>();
 
@@ -18,7 +22,7 @@ class Variables {
   }
 }
 
-export const _3SAT = (varsAmount: number, clauses: [string, string, string][]) => { // Current complexity O(3n) "n" being "clauses"
+export const _3SAT = (varsAmount: number, clauses: [string, string, string][]) => { // Current complexity O(3n) "n" being clauses.length
   if (!Number.isSafeInteger(varsAmount) || varsAmount <= 0) {
     throw new Error("Invalid number of variables, must be a positive safe integer greater than 0");
   }
@@ -36,17 +40,23 @@ export const _3SAT = (varsAmount: number, clauses: [string, string, string][]) =
     }
 
     for (const expression of clause) {
+      if (typeof expression !== "string" || !expression) {
+        throw new Error(`Each expression inside a clause must be a not empty string, received ${expression} at clauses[${i}]`);
+      }
+
       const isNegated = expression.startsWith("not ");
       const variableKey = isNegated
-        ? expression.substring("not ".length)
+        ? expression.slice("not ".length)
         : expression;
+
+      if (!variableKey) {
+        throw new Error(`Received empty variable name at clauses[${i}]`);
+      }
 
       variables.push(variableKey);
     }
   }
 };
-
-console.log("Ejecutando el 0003!");
 
 _3SAT(
   3,
