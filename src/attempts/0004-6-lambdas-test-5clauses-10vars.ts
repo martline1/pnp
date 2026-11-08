@@ -187,8 +187,47 @@ function main() {
     And
       (secondClause)
       (intermediate2);
-  
-  var intermediate3
+
+  var intermediate3 = (secondClause)(intermediate2)(secondClause);
+
+  var intermediate3 =
+  (four(False)(True)
+    (four(False)(True))
+    (five
+      (five)
+      (six(False)(True))))
+    (intermediate2)
+    (
+      four(False)(True)
+        (four(False)(True))
+        (five
+          (five)
+          (six(False)(True)))
+    );
+
+  // Next inner "And" expression
+
+  var intermediate4 =
+    And
+      (firstClause)
+      (intermediate3);
+
+  var intermediate4 = (firstClause)(intermediate3)(firstClause);
+
+  var intermediate4 =
+  (one
+    (one)
+    (two(False)(True)
+      (two(False)(True))
+      (three)))
+    (intermediate3)
+    (
+      one
+        (one)
+        (two(False)(True)
+          (two(False)(True))
+          (three))
+    );
 }
 
 main();

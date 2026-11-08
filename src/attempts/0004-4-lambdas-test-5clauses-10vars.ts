@@ -107,7 +107,7 @@ function main() {
     (five
       (five)
       (six(False)(True)));
-  
+
   // That's the expected shape for the second clause, we have to do the same for all clauses
   // See the [next file](src/attempts/0004-5-lambdas-test-5clauses-10vars.ts) to see the results
 }
