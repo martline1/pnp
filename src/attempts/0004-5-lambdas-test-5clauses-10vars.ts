@@ -65,7 +65,7 @@ function main() {
   const secondClause = Or(Not(four))(Or(five)(Not(six))); // (!x4 | x5 | !x6)
   const thirdClause  = Or(seven)(Or(eight)(Not(nine)));   // (x7 | x8 | !x9)
   const fourthClause = Or(Not(ten))(Or(two)(Not(five)));  // (!x10 | x2 | !x5)
-  const fifthClause  = Or(one)(Or(Not(three))(six));      // (x1 | !x3 | x6)
+  const fifthClause  = Or(one)(Or(Not(three))(six));      // (x1 | !x3 | x6) // i
 
   const finalExpression = And
     (firstClause)

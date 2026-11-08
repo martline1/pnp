@@ -19,7 +19,7 @@ class Variables {
 
     if (this.data.size === this.maxSize) {
       throw new Error(`Max number of variables already reached, cannot push extra variable: ${value}`);
-    }
+    } // a
 
     this.data.add(value);
   }

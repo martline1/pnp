@@ -2,7 +2,7 @@ a, b, c, d
 
 
 (!a, !c, d) -> a:F, c:F, d:T
-(b , !b, a) -> b:T, b:F, a:T
+(b , !b, a) -> b:T, b:F, a:T <!-- l -->
 (!d, d !a)  -> d:F, d:V, a:F
 (c, a, !b)  -> c:T, a:T, b:F
 

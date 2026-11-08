@@ -7,7 +7,7 @@
 
 import * as path from "node:path";
 
-console.log(`Imported: ${path.basename(__filename)}`);
+console.log(`Imported: ${path.basename(__filename)}`); // y
 
 /**
  * @example

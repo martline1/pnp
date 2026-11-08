@@ -18,7 +18,7 @@ class Variables {
       throw new Error(`Max number of variables already reached, cannot push extra variable: ${value}`);
     }
 
-    this.data.add(value);
+    this.data.add(value); // e
   }
 }
 

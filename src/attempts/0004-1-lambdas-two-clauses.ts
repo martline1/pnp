@@ -14,7 +14,7 @@ const Not = a => a(False)(True);
 // @ts-ignore
 var Or = x => y => x(True)(y);
 // @ts-ignore
-var Or = x => y => x(x)(y);
+var Or = x => y => x(x)(y); // m
 // @ts-ignore
 var And = x => y => x(y(True)(False))(False);
 // @ts-ignore

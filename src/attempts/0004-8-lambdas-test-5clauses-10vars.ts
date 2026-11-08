@@ -55,7 +55,7 @@ function main() {
   // if var(False)(True) -> False
 
   // Problema:
-  // (x1 | !x2 | x3)
+  // (x1 | !x2 | x3) // a
   // & (!x4 | x5 | !x6)
   // & (x7 | x8 | !x9)
   // & (!x10 | x2 | !x5)

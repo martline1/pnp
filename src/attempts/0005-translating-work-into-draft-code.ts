@@ -1,8 +1,24 @@
 // Objetivo: O(n^12)
 
+import assert from "node:assert";
 import * as path from "node:path";
 
 console.log(`Imported: ${path.basename(__filename)}`);
+
+// @ts-ignore
+const True  = x => y => x;
+// @ts-ignore
+const False = x => y => y;
+// @ts-ignore
+const Not = a => a(False)(True);
+// @ts-ignore
+var Or = x => y => x(True)(y);
+// @ts-ignore
+var Or = x => y => x(x)(y);
+// @ts-ignore
+var And = x => y => x(y(True)(False))(False);
+// @ts-ignore
+var And = x => y => x(y)(x);
 
 class Variables {
   private readonly data = new Set<string>();
@@ -58,12 +74,51 @@ export const _3SAT = (varsAmount: number, clauses: [string, string, string][]) =
   }
 };
 
-_3SAT(
-  3,
-  [
-    ["not a", "b", "c"],
-    ["b", "not c", "not a"],
-    ["not c", "not b", "a"],
-    ["not a", "a", "not c"],
-  ]
-);
+// @ts-ignore
+const toBoolean = a => a(true)(false);
+
+function main() {
+  assert(toBoolean(Not(True)) === false);
+  assert(toBoolean(Not(False)) === true);
+
+  assert(toBoolean(Or(True)(True)) === true);
+  assert(toBoolean(Or(True)(False)) === true);
+  assert(toBoolean(Or(False)(True)) === true);
+  assert(toBoolean(Or(False)(False)) === false);
+
+  assert(toBoolean(And(True)(True)) === true);
+  assert(toBoolean(And(True)(False)) === false);
+  assert(toBoolean(And(False)(True)) === false);
+  assert(toBoolean(And(False)(False)) === false);
+
+  // Problema de la [página anterior](src/attempts/0004-8-test-results-draw-conclusions.ts) // a
+
+  //   (x1 || !x2 || !x3)
+  // && (!x1 || !x2 || !x3)
+  // && (!x1 || x2 || !x3)
+  // && (!x1 || !x2 || x3)
+  // && (x1 || x2 || !x3)
+  // && (x1 || !x2 || x3)
+  // && (x1 || x2 || x3)
+  // && (x1 || x2 || x2)
+  // && (x1 || !x3 || !x3)
+  // && (!x2 || !x3 || !x3)
+
+  _3SAT(
+    3,
+    [
+      ["x1", "not x2", "not x3"],
+      ["not x1","not x2","not x3"],
+      ["not x1", "x2", "not x3"],
+      ["not x1", "not x2", "x3"],
+      ["x1", "x2", "not x3"],
+      ["x1", "not x2", "x3"],
+      ["x1", "x2", "x3"],
+      ["x1", "x2", "x2"],
+      ["x1", "not x3", "not x3"],
+      ["not x2", "not x3", "not x3"],
+    ]
+  );
+}
+
+main();

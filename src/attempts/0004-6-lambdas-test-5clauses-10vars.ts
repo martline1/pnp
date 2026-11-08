@@ -106,7 +106,7 @@ function main() {
       (five(False)(True)));
 
   // Fifth clause:
-  one
+  one // n
     (one)
     (three(False)(True)
       (three(False)(True))

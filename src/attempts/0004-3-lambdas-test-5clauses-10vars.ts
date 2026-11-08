@@ -79,7 +79,7 @@ function main() {
 
   // Evaluemos la primera cláusula:
 
-  Or
+  Or // r
     (one)
     (Or
       (Not(two))

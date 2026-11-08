@@ -52,7 +52,7 @@ function main() {
   // let's try to define the algorithm with this:
 
   // if var(var)         -> True
-  // if var(False)(True) -> False
+  // if var(False)(True) -> False // t
 
   // Problema:
   // (x1 | !x2 | x3)

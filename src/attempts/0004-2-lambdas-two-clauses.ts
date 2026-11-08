@@ -39,6 +39,7 @@ function main() {
 
   // Based on the repetitions of [before](src/attempts/0004-1-lambdas-two-clauses.ts)
   // We assign values to the variables if var(var) -> True, if var(False)(True) -> False ??
+  // a
 
   const one   = False;
   const two   = False;
