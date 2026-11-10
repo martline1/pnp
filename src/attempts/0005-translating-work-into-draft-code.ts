@@ -3,22 +3,17 @@
 import assert from "node:assert";
 import * as path from "node:path";
 
+import { ChurchBoolean } from "./0005-types";
+
 console.log(`Imported: ${path.basename(__filename)}`);
 
-// @ts-ignore
-const True  = x => y => x;
-// @ts-ignore
-const False = x => y => y;
-// @ts-ignore
-const Not = a => a(False)(True);
-// @ts-ignore
-var Or = x => y => x(True)(y);
-// @ts-ignore
-var Or = x => y => x(x)(y);
-// @ts-ignore
-var And = x => y => x(y(True)(False))(False);
-// @ts-ignore
-var And = x => y => x(y)(x);
+const True: ChurchBoolean  = x => y => x;
+const False: ChurchBoolean = x => y => y;
+const Or  = (x: ChurchBoolean) => (y: ChurchBoolean) => x(x)(y);
+const And = (x: ChurchBoolean) => (y: ChurchBoolean) => x(y)(x);
+const Not = (a: ChurchBoolean) => a(False)(True);
+
+const toBoolean = (a: ChurchBoolean) => a(true)(false) as unknown as boolean;
 
 class Variables {
   private readonly data = new Set<string>();
@@ -73,9 +68,6 @@ export const _3SAT = (varsAmount: number, clauses: [string, string, string][]) =
     }
   }
 };
-
-// @ts-ignore
-const toBoolean = a => a(true)(false);
 
 function main() {
   assert(toBoolean(Not(True)) === false);
