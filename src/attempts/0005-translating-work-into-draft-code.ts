@@ -1,4 +1,4 @@
-// Objetivo: O(n^12)
+// Objetivo: O(n^2)
 
 import assert from "node:assert";
 import * as path from "node:path";
@@ -42,29 +42,52 @@ export const _3SAT = (varsAmount: number, clauses: [string, string, string][]) =
   }
 
   const variables = new Variables(varsAmount);
+  const clausesProcessed = new Set<string>();
 
   for (let i = 0; i < clauses.length; i++) {
     const clause = clauses[i];
+
+    if (i > 0) break; // temp stop
 
     if (!Array.isArray(clause) || clause.length !== 3) {
       throw new Error(`Each clause must be an array of 3 items, received ${clause?.join?.(", ")} at clauses[${i}]`);
     }
 
-    for (const expression of clause) {
-      if (typeof expression !== "string" || !expression) {
-        throw new Error(`Each expression inside a clause must be a not empty string, received ${expression} at clauses[${i}]`);
+    for (const literal of clause) {
+      if (typeof literal !== "string" || !literal) {
+        throw new Error(`Each literal inside a clause must be a non empty string, received ${literal} at clauses[${i}]`);
       }
 
-      const isNegated = expression.startsWith("not ");
+      const isNegated = literal.startsWith("not ");
       const variableKey = isNegated
-        ? expression.slice("not ".length)
-        : expression;
+        ? literal.slice("not ".length)
+        : literal;
 
       if (!variableKey) {
         throw new Error(`Received empty variable name at clauses[${i}]`);
       }
 
       variables.push(variableKey);
+    }
+
+    const joinedClause = clause.sort().join(""); // constant time in practice, due to the arr size (3)
+
+    if (clausesProcessed.has(joinedClause)) continue;
+    clausesProcessed.add(joinedClause);
+
+    for (const literal of clause) {
+      const isNegated = literal.startsWith("not ");
+      const variableKey = isNegated
+        ? literal.slice("not ".length)
+        : literal;
+      
+const True: ChurchBoolean  = x => y => x;
+const False: ChurchBoolean = x => y => y;
+const Or  = (x: ChurchBoolean) => (y: ChurchBoolean) => x(x)(y);
+const And = (x: ChurchBoolean) => (y: ChurchBoolean) => x(y)(x);
+const Not = (a: ChurchBoolean) => a(False)(True);
+
+      
     }
   }
 };
