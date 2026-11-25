@@ -1,39 +1,22 @@
 // Objetivo: O(n^2)
 
-import assert from "node:assert";
 import * as path from "node:path";
-
-import { ChurchBoolean } from "./0005-types";
 
 console.log(`Imported: ${path.basename(__filename)}`);
 
-const True: ChurchBoolean  = x => y => x;
-const False: ChurchBoolean = x => y => y;
-const Or  = (x: ChurchBoolean) => (y: ChurchBoolean) => x(x)(y);
-const And = (x: ChurchBoolean) => (y: ChurchBoolean) => x(y)(x);
-const Not = (a: ChurchBoolean) => a(False)(True);
+export type Clause = [string, string, string];
 
-const toBoolean = (a: ChurchBoolean) => a(true)(false) as unknown as boolean;
-
-class Variables {
-  private readonly data = new Set<string>();
-
-  constructor(
-    private readonly maxSize: number,
-  ) {}
-
-  public push(value: string): void {
-    if (this.data.has(value)) return;
-
-    if (this.data.size === this.maxSize) {
-      throw new Error(`Max number of variables already reached, cannot push extra variable: ${value}`);
-    }
-
-    this.data.add(value);
-  }
-}
-
-export const _3SAT = (varsAmount: number, clauses: [string, string, string][]) => { // Current complexity O(3n) "n" being clauses.length
+/**
+ * Verifies input is of the expected shape, variables count is exactly the expected amount,
+ * ignores duplicate clauses, each variable is a string identifier with length > 0 and less than
+ * or equal to 255.
+ * 
+ * This algorithmn is linear, let n be clauses.length:
+ * - Each clause, contains 3 literals which it iterates     | + 3 actions per clause
+ * - Each clause is sorted, which is at most 3 comparissons | + 3 actions per clause
+ * With 6 actions per clause that leaves the time complexity of this algorithmn as O(n*6)
+ */
+export const parseInput = (varsAmount: number, clauses: Clause[]): Clause[] => {
   if (!Number.isSafeInteger(varsAmount) || varsAmount <= 0) {
     throw new Error("Invalid number of variables, must be a positive safe integer greater than 0");
   }
@@ -41,71 +24,106 @@ export const _3SAT = (varsAmount: number, clauses: [string, string, string][]) =
     throw new Error("Invalid number of clauses, must be a valid array with length greater than 0");
   }
 
-  const variables = new Variables(varsAmount);
-  const clausesProcessed = new Set<string>();
+  const seenVariables = new Set<string>();
+  const pushToSeenVariables = (value: string) => {
+    if (seenVariables.has(value)) return;
+
+    if (seenVariables.size === varsAmount) {
+      throw new Error(`Max number of variables already reached, cannot push extra variable: ${value}`);
+    }
+
+    seenVariables.add(value);
+  };
+
+  const seenClauses = new Set<string>();
+
+  const finalCluases: Clause[] = [];
 
   for (let i = 0; i < clauses.length; i++) {
-    const clause = clauses[i];
-
-    if (i > 0) break; // temp stop
+    const clause = clauses[i]!;
+    const clausePositionKey = `clauses[${i}]`;
 
     if (!Array.isArray(clause) || clause.length !== 3) {
-      throw new Error(`Each clause must be an array of 3 items, received ${clause?.join?.(", ")} at clauses[${i}]`);
+      throw new Error(`Each clause must be an array of 3 items, received ${clause?.join?.(", ")} at ${clausePositionKey}`);
     }
 
     for (const literal of clause) {
-      if (typeof literal !== "string" || !literal) {
-        throw new Error(`Each literal inside a clause must be a non empty string, received ${literal} at clauses[${i}]`);
+      if (!literal || typeof literal !== "string") {
+        throw new Error(`Each literal inside a clause must be a non empty string, received ${literal} at ${clausePositionKey}`);
       }
 
-      const isNegated = literal.startsWith("not ");
-      const variableKey = isNegated
+      const variableName = literal.startsWith("not ")
         ? literal.slice("not ".length)
         : literal;
 
-      if (!variableKey) {
-        throw new Error(`Received empty variable name at clauses[${i}]`);
+      if (!variableName) {
+        throw new Error(`Received empty variable name at ${clausePositionKey}`);
+      }
+      if (variableName.length > 255) {
+        throw new Error(`The name of any given variable must be under 255 characters, received ${variableName} at ${clausePositionKey}`);
       }
 
-      variables.push(variableKey);
+      pushToSeenVariables(variableName);
     }
 
-    const joinedClause = clause.sort().join(""); // constant time in practice, due to the arr size (3)
+    const joinedClause = clause.sort().join(""); // constant time in practice, due to the fixed arr size (3), at most 3 string comparissons
 
-    if (clausesProcessed.has(joinedClause)) continue;
-    clausesProcessed.add(joinedClause);
+    if (seenClauses.has(joinedClause)) continue;
 
-    for (const literal of clause) {
+    seenClauses.add(joinedClause);
+    finalCluases.push(clause);
+  }
+
+  if (seenVariables.size !== varsAmount) {
+    throw new Error(`Expected to have ${varsAmount} instead we found ${seenVariables.size}`);
+  }
+
+  return finalCluases;
+};
+
+export const _3SAT = (varsAmount: number, clauses: Clause[]) => {
+  clauses = parseInput(varsAmount, clauses); // This adds linear complexity
+
+  if (clauses.length < 2) {
+    throw new Error("Not implemented for clauses.length < 2");
+  }
+
+  const last = clauses.pop()!;
+
+  clauses = [...clauses, ...clauses, last]; // Aplies AND
+
+  const results: Record<string, { positiveVotes: number; negativeVotes: number }> = {};
+
+  for (const clause of clauses) {
+    const literals = [ // Aplies OR
+      clause[0],clause[0],clause[1],clause[1],clause[2]
+    ];
+
+    for (const literal of literals) {
       const isNegated = literal.startsWith("not ");
-      const variableKey = isNegated
+      const variableName = isNegated
         ? literal.slice("not ".length)
         : literal;
       
-const True: ChurchBoolean  = x => y => x;
-const False: ChurchBoolean = x => y => y;
-const Or  = (x: ChurchBoolean) => (y: ChurchBoolean) => x(x)(y);
-const And = (x: ChurchBoolean) => (y: ChurchBoolean) => x(y)(x);
-const Not = (a: ChurchBoolean) => a(False)(True);
+      if (!(variableName in results)) {
+        results[variableName] = {
+          positiveVotes: 0,
+          negativeVotes: 0,
+        };
+      }
 
-      
+      if (isNegated) {
+        results[variableName]!.negativeVotes += 1;
+      } else {
+        results[variableName]!.positiveVotes += 1;
+      }
     }
   }
+
+  console.log(results);
 };
 
 function main() {
-  assert(toBoolean(Not(True)) === false);
-  assert(toBoolean(Not(False)) === true);
-
-  assert(toBoolean(Or(True)(True)) === true);
-  assert(toBoolean(Or(True)(False)) === true);
-  assert(toBoolean(Or(False)(True)) === true);
-  assert(toBoolean(Or(False)(False)) === false);
-
-  assert(toBoolean(And(True)(True)) === true);
-  assert(toBoolean(And(True)(False)) === false);
-  assert(toBoolean(And(False)(True)) === false);
-  assert(toBoolean(And(False)(False)) === false);
-
   // Problema de la [página anterior](src/attempts/0004-8-test-results-draw-conclusions.ts) // a
 
   //   (x1 || !x2 || !x3)
