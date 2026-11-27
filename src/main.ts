@@ -1,3 +1,5 @@
+// Please read [empiric-data.md](src/empiric-data.md)
+
 import assert from "node:assert";
 import { parseInput } from "./parseInput";
 import { Clause } from "./types";

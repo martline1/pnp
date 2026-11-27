@@ -7,10 +7,8 @@ This is a set of results and the collection of Church Boolean's distribution and
 Se solucionó con Church Boolean's Distribution:
 
 - `And(And()())(And()())` - Simétrico
-- `Or(Or()())()` - Left loaded
-
-Orden de variables:
-- Doesn't matter
+- `Or(Or()())()` - Left loaded AND
+- `Or()(Or()())` - Right loaded it works on both left and right loaded distributions!
 
 ```ts
 assert.deepStrictEqual(
@@ -37,9 +35,6 @@ assert.deepStrictEqual(
 It's solved with Church Boolean's Distribution:
 - `And()(And()(And()(And()())))` - Right loaded
 - `OR()(OR()())` - Right loaded
-
-Orden de variables
-- Doesn't matter
 
 ```ts
 assert.deepStrictEqual(
