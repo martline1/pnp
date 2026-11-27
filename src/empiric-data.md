@@ -50,3 +50,24 @@ assert.deepStrictEqual(
   },
 );
 ```
+
+## Problem C, 4, 4
+
+Distribution:
+- `And()(And()(And()(And()())))` - Right loaded
+- `Or(Or()())()` - Left loaded
+
+```ts
+assert.deepStrictEqual(
+  _3SAT(4, [
+    ["x_1", "x_3", "x_3"],
+    ["not x_2", "not x_4", "not x_4"],
+    ["x_2", "not x_3", "not x_3"],
+    ["x_4", "x_4", "x_4"]
+  ]),
+  {
+    status: 'satisfiable',
+    variables: { x_1: true, x_3: false, x_2: false, x_4: true }
+  },
+);
+```

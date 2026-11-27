@@ -50,14 +50,14 @@ export const _3SAT = (varsAmount: number, clauses: Clause[]): _3SatResult => {
 
   const last = clauses.pop();
 
-  // This applies And()(And()(And()(And()())))
+  // This applies [Right] And()(And()(And()(And()())))
   const newClauses = [
     ...clauses,
     ...clauses,
     last,
   ];
 
-  // // This applies And(And()())(And()())
+  // // This applies [Simétrico] And(And()())(And()())
   // const newClauses = [
   //   clauses[0]!,
   //   clauses[0]!,
@@ -73,7 +73,7 @@ export const _3SAT = (varsAmount: number, clauses: Clause[]): _3SatResult => {
   const votes: VotesPerVariable = {};
 
   for (const clause of newClauses) {
-    const literals = orDistribution(clause!).rightLoaded;
+    const literals = orDistribution(clause!).leftLoaded;
 
     for (const literal of literals) {
       const isNegated = literal.startsWith("not ");
@@ -123,13 +123,13 @@ export const _3SAT = (varsAmount: number, clauses: Clause[]): _3SatResult => {
 
 assert.deepStrictEqual(
   _3SAT(4, [
-    ["not x_1", "x_2", "x_2"],
-    ["not x_2", "not x_3", "not x_3"],
-    ["x_3", "x_4", "x_4"],
-    ["x_1", "x_1", "x_1"]
+    ["x_1", "x_3", "x_3"],
+    ["not x_2", "not x_4", "not x_4"],
+    ["x_2", "not x_3", "not x_3"],
+    ["x_4", "x_4", "x_4"]
   ]),
   {
     status: 'satisfiable',
-    variables: { x_1: true, x_2: true, x_3: false, x_4: true },
+    variables: { x_1: true, x_3: false, x_2: false, x_4: true }
   },
 );
