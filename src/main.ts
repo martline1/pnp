@@ -21,7 +21,7 @@ export type _3SatResult =
   };
 
 const orDistribution = (clause: [string, string, string]) => ({
-  leftLoaded: [ // OR(OR()())()
+  leftLoaded: [ // Or(Or()())()
     clause[0],
     clause[0],
     clause[0],
@@ -30,7 +30,7 @@ const orDistribution = (clause: [string, string, string]) => ({
     clause[1],
     clause[2],
   ],
-  rightLoaded: [ // OR()(OR()())
+  rightLoaded: [ // Or()(Or()())
     clause[0],
     clause[0],
     clause[1],
@@ -46,23 +46,32 @@ export const _3SAT = (varsAmount: number, clauses: Clause[]): _3SatResult => {
     throw new Error("Not implemented for clauses.length !== 4");
   }
 
-  // This applies AND(AND()())(AND()())
+  const last = clauses.pop();
+
+  // This applies And()(And()(And()(And()())))
   const newClauses = [
-    clauses[0]!,
-    clauses[0]!,
-    clauses[0]!,
-    clauses[0]!,
-    clauses[1]!,
-    clauses[1]!,
-    clauses[2]!,
-    clauses[2]!,
-    clauses[3]!,
+    ...clauses,
+    ...clauses,
+    last,
   ];
+
+  // // This applies And(And()())(And()())
+  // const newClauses = [
+  //   clauses[0]!,
+  //   clauses[0]!,
+  //   clauses[0]!,
+  //   clauses[0]!,
+  //   clauses[1]!,
+  //   clauses[1]!,
+  //   clauses[2]!,
+  //   clauses[2]!,
+  //   clauses[3]!,
+  // ];
 
   const votes: VotesPerVariable = {};
 
   for (const clause of newClauses) {
-    const literals = orDistribution(clause.reverse() as any).rightLoaded;
+    const literals = orDistribution(clause!).rightLoaded;
 
     for (const literal of literals) {
       const isNegated = literal.startsWith("not ");
@@ -110,24 +119,15 @@ export const _3SAT = (varsAmount: number, clauses: Clause[]): _3SatResult => {
   };
 };
 
-const result = _3SAT(4, [
-  ["not x_1", "not x_1", "not x_1"],
-  ["x_1", "not x_2", "not x_2"],
-  ["x_2", "x_3", "x_3"],
-  ["not x_3", "not x_4", "not x_4"]
-]);
-
-console.log(result);
-
 assert.deepStrictEqual(
-  result,
+  _3SAT(4, [
+    ["not x_1", "x_2", "x_2"],
+    ["not x_2", "not x_3", "not x_3"],
+    ["x_3", "x_4", "x_4"],
+    ["x_1", "x_1", "x_1"]
+  ]),
   {
     status: 'satisfiable',
-    variables: {
-      x_1: false,
-      x_2: false,
-      x_3: true,
-      x_4: false
-    }
+    variables: { x_1: true, x_2: true, x_3: false, x_4: true },
   },
 );
